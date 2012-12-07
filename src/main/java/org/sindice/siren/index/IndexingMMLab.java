@@ -50,6 +50,8 @@ public abstract class IndexingMMLab implements Iterator<Entity> {
   final static public String        URL               = "url";
   final static public String        NTRIPLE           = "ntriple";
   final static public String        TYPE              = "type";
+  final static public String        LABEL              = "label";
+  final static public String        DESCRIPTION              = "description";
   
   /* The dataset files */
   protected final File[]            input;
@@ -183,7 +185,9 @@ public abstract class IndexingMMLab implements Iterator<Entity> {
       final SolrInputDocument document = new SolrInputDocument();
       document.addField(URL, StringUtils.strip(entity.subject, "<>"));
       document.addField(NTRIPLE, cleanup(entity.getTriples(true)));
-      //document.addField(TYPE, Utils.toString(entity.type));
+      document.addField(TYPE, Utils.toString(entity.type));
+      document.addField(LABEL, Utils.toString(entity.label));
+      document.addField(DESCRIPTION, Utils.toString(entity.description));
 
       add(document);
       

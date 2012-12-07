@@ -40,6 +40,9 @@ public class Utils {
   /* byte array used for reading the compressed tar files */
   private static final ByteBuffer     bbuffer   = ByteBuffer.allocate(1024);
   private static final String         RDF_TYPE  = "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>";
+  private static final String         DC_DESCRIPTION  = "<http://purl.org/dc/elements/1.1/description>";
+  private static final String         DBP_ABSTRACT  = "<http://dbpedia.org/ontology/abstract>";
+  private static final String         RDFS_LABEL  = "<http://www.w3.org/2000/01/rdf-schema#label>";
   private static final StringBuilder  sb        = new StringBuilder();
   private static RDFParser            parser    = null;
   private static StatementCollector   collector = null;  
@@ -106,8 +109,8 @@ public class Utils {
    * @param types
    * @param isOut
    */
-  public static void sortAndFlattenNTriples(final StringBuilder triples, final HashMap<String, HashSet<String>> map, final HashSet<String> types, final boolean isOut) {
-    flattenNTriples(triples, map, types, isOut);
+  public static void sortAndFlattenNTriples(final StringBuilder triples, final HashMap<String, HashSet<String>> map, final HashSet<String> types, final HashSet<String> label, final HashSet<String> description, final boolean isOut) {
+    flattenNTriples(triples, map, types, label, description, isOut);
   }
   
   private static void initParser() {
@@ -127,7 +130,7 @@ public class Utils {
    *          The list of n-triples.
    * @return The n-tuples concatenated.
    */
-  private static void flattenNTriples(final StringBuilder triples, final Map<String, HashSet<String>> map, final HashSet<String> types, final boolean isOut) {
+  private static void flattenNTriples(final StringBuilder triples, final Map<String, HashSet<String>> map, final HashSet<String> types, final HashSet<String> label, final HashSet<String> description, final boolean isOut) {
     try {
       initParser();
       parser.parse(new StringReader(triples.toString()), "");
@@ -139,6 +142,12 @@ public class Utils {
         sb.setLength(0);
         final String object = (st.getObject() instanceof URI) ? sb.append('<').append(st.getObject().toString()).append('>').toString()
                                                               : st.getObject().toString();
+	if (label != null && predicate.equals(RDFS_LABEL))
+          label.add(object);
+	if (description != null && predicate.equals(DC_DESCRIPTION))
+          description.add(object);
+	if (description != null && predicate.equals(DBP_ABSTRACT))
+          description.add(object);
         if (types != null && predicate.equals(RDF_TYPE)) {
           types.add(object);
         } else {

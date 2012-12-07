@@ -38,6 +38,8 @@ public class Entity {
   final StringBuilder sbMetadata = new StringBuilder();
   /* rdf:type statement's objects */
   final HashSet<String> type = new HashSet<String>();
+  final HashSet<String> label = new HashSet<String>();
+  final HashSet<String> description = new HashSet<String>();
   
   final StringBuilder sb = new StringBuilder();
   
