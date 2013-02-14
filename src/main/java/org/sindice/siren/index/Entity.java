@@ -53,6 +53,8 @@ public class Entity {
     outTuples.clear();
     sb.setLength(0);
     type.clear();
+    label.clear();
+    description.clear();
     sbMetadata.setLength(0);
   }
   
