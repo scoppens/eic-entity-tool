@@ -188,10 +188,12 @@ public abstract class IndexingMMLab implements Iterator<Entity> {
       document.addField(TYPE, Utils.toString(entity.type));
       document.addField(LABEL, Utils.toString(entity.label));
       document.addField(DESCRIPTION, Utils.toString(entity.description));
-
-      add(document);
-      
-      counter = commit(true, counter, entity.subject);
+      try {
+	add(document);
+	counter = commit(true, counter, entity.subject);
+      } catch (SolrServerException e) {
+	logger.error("Error while processing the document: {}", e);
+      }
     }
     commit(false, counter, entity.subject); // Commit what is left
   }
