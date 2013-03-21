@@ -191,7 +191,7 @@ public abstract class IndexingMMLab implements Iterator<Entity> {
       try {
 	add(document);
 	counter = commit(true, counter, entity.subject);
-      } catch (SolrServerException e) {
+      } catch (Exception e) {
 	logger.error("Error while processing the document: {}", e);
       }
     }
