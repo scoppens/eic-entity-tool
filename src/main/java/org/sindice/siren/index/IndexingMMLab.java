@@ -13,7 +13,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.zip.GZIPInputStream;
+//import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -27,6 +27,8 @@ import org.apache.solr.client.solrj.request.UpdateRequest;
 import org.apache.solr.common.SolrInputDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.jcraft.jzlib.*;
 
 /**
  * Index a list of entities, creating incoming, outgoing triples fields, subject
