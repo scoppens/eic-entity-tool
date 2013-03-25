@@ -22,6 +22,7 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
+import org.apache.solr.client.solrj.impl.StreamingUpdateSolrServer;
 import org.apache.solr.client.solrj.request.UpdateRequest;
 import org.apache.solr.common.SolrInputDocument;
 import org.slf4j.Logger;
@@ -100,7 +101,7 @@ public abstract class IndexingMMLab implements Iterator<Entity> {
     
     
     this.indexURL = url;
-    server = new CommonsHttpSolrServer(indexURL);
+    server = new StreamingUpdateSolrServer(indexURL, COMMIT, 32);
     // Clear the index
     if (CLEAR){
     	clear();
