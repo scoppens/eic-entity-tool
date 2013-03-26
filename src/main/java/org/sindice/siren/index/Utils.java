@@ -148,7 +148,7 @@ public class Utils {
           description.add(object);
 	if (description != null && predicate.equals(DBP_ABSTRACT))
           description.add(object);
-        if (types != null && predicate.equals(RDF_TYPE)) {
+    if (types != null && predicate.equals(RDF_TYPE)) {
           types.add(object);
         } else {
           HashSet<String> hs = map.get(predicate);
