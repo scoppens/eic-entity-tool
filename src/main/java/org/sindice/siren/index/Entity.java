@@ -64,7 +64,7 @@ public class Entity {
     sb.setLength(0);
     for (Entry<String, HashSet<String>> e : map.entrySet()) {
     	for (String s : e.getValue()){
-		if ( (subject.contains('<') && subject.contains('>')) || subject.indexOf('_') == 0)
+		if ( (subject.contains("<") && subject.contains(">")) || subject.indexOf('_') == 0)
 			sb.append(subject).append(' ').append(e.getKey()).append(' ').append(s).append(" .\n");
 		else
 			sb.append('<').append(subject).append('>').append(' ').append(e.getKey()).append(' ').append(s).append(" .\n");
