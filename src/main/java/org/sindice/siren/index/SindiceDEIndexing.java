@@ -91,7 +91,7 @@ public class SindiceDEIndexing extends IndexingMMLab {
           entityByteSize += tarEntry.getSize();
           Utils.getFile(reader, tarEntry.getSize(), entity.sb);
           // Strip outgoing triples from rdf:type statements
-          Utils.sortAndFlattenNTriples(entity.sb, entity.outTuples, entity.type, true);
+          Utils.sortAndFlattenNTriples(entity.sb, entity.outTuples, entity.type, entity.label, entity.description, true);
           /*
            * incoming-triples.nt
            */
@@ -107,7 +107,7 @@ public class SindiceDEIndexing extends IndexingMMLab {
             entity.inTuples.clear();
           } else {
             Utils.getFile(reader, tarEntry.getSize(), entity.sb);
-            Utils.sortAndFlattenNTriples(entity.sb, entity.inTuples, null, false);
+            Utils.sortAndFlattenNTriples(entity.sb, entity.inTuples, null, null, null, false);
           }
         } while (hasNext(entityID)); // while documents describe the same entity
       } catch (IOException e) {
