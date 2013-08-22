@@ -38,6 +38,8 @@ public class Entity {
   final StringBuilder sbMetadata = new StringBuilder();
   /* rdf:type statement's objects */
   final HashSet<String> type = new HashSet<String>();
+  final HashSet<String> label = new HashSet<String>();
+  final HashSet<String> description = new HashSet<String>();
   
   final StringBuilder sb = new StringBuilder();
   
@@ -51,6 +53,8 @@ public class Entity {
     outTuples.clear();
     sb.setLength(0);
     type.clear();
+    label.clear();
+    description.clear();
     sbMetadata.setLength(0);
   }
   
@@ -60,8 +64,11 @@ public class Entity {
     sb.setLength(0);
     for (Entry<String, HashSet<String>> e : map.entrySet()) {
     	for (String s : e.getValue()){
-      sb.append(subject).append(' ').append(e.getKey()).append(' ').append(s).append(" .\n");
-    	}
+		if ( (subject.contains("<") && subject.contains(">")) || subject.indexOf('_') == 0)
+			sb.append(subject).append(' ').append(e.getKey()).append(' ').append(s).append(" .\n");
+		else
+			sb.append('<').append(subject).append('>').append(' ').append(e.getKey()).append(' ').append(s).append(" .\n");
+	}
     }
     return sb.toString();
   }

@@ -13,7 +13,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.zip.GZIPInputStream;
+//import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -22,10 +22,13 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
+import org.apache.solr.client.solrj.impl.StreamingUpdateSolrServer;
 import org.apache.solr.client.solrj.request.UpdateRequest;
 import org.apache.solr.common.SolrInputDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.jcraft.jzlib.*;
 
 /**
  * Index a list of entities, creating incoming, outgoing triples fields, subject
@@ -50,6 +53,8 @@ public abstract class IndexingMMLab implements Iterator<Entity> {
   final static public String        URL               = "url";
   final static public String        NTRIPLE           = "ntriple";
   final static public String        TYPE              = "type";
+  final static public String        LABEL              = "label";
+  final static public String        DESCRIPTION              = "description";
   
   /* The dataset files */
   protected final File[]            input;
@@ -98,7 +103,7 @@ public abstract class IndexingMMLab implements Iterator<Entity> {
     
     
     this.indexURL = url;
-    server = new CommonsHttpSolrServer(indexURL);
+    server = new StreamingUpdateSolrServer(indexURL, COMMIT, 32);
     // Clear the index
     if (CLEAR){
     	clear();
@@ -183,11 +188,15 @@ public abstract class IndexingMMLab implements Iterator<Entity> {
       final SolrInputDocument document = new SolrInputDocument();
       document.addField(URL, StringUtils.strip(entity.subject, "<>"));
       document.addField(NTRIPLE, cleanup(entity.getTriples(true)));
-      //document.addField(TYPE, Utils.toString(entity.type));
-
-      add(document);
-      
-      counter = commit(true, counter, entity.subject);
+      document.addField(TYPE, Utils.toString(entity.type));
+      document.addField(LABEL, Utils.toString(entity.label));
+      document.addField(DESCRIPTION, Utils.toString(entity.description));
+      try {
+	add(document);
+	counter = commit(true, counter, entity.subject);
+      } catch (Exception e) {
+	logger.error("Error while processing the document: {}", e);
+      }
     }
     commit(false, counter, entity.subject); // Commit what is left
   }
